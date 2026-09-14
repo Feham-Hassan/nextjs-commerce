@@ -217,7 +217,7 @@ export default function RegistrationForm() {
         <button
           type="button"
           onClick={() => setIsShortcutsOpen(true)}
-          className="w-[181px] h-[47px] bg-surface-muted text-black dark:bg-surface-navy dark:text-white rounded-full flex items-center justify-center gap-1 font-outfit font-medium text-lg leading-none px-10 py-3 shadow-none border-none outline-none"
+          className="cursor-pointer w-[181px] h-[47px] bg-surface-muted text-black dark:bg-surface-navy dark:text-white rounded-full flex items-center justify-center gap-1 font-outfit font-medium text-lg leading-none px-10 py-3 shadow-none border-none outline-none"
         >
           <ShortcutIcon />
           <span>Shortcuts</span>

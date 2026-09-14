@@ -3,7 +3,7 @@ import { GridTileImage } from "@components/theme/ui/grid/Tile";
 import { Price } from "@components/theme/ui/Price";
 import CartItemAccordion from "./CartItemAccordian";
 import Link from "next/link";
-import { createUrl, getCartItemImageUrl, isShippingRequired, safeParse } from "@utils/helper";
+import { createUrl, getCartItemImageUrl, isShippingRequired } from "@utils/helper";
 import type { CartItemEdge, CartSummaryView } from "@/types/cart/type";
 
 
@@ -48,10 +48,11 @@ export default function CheckoutCart({
                           <GridTileImage
                              alt={item?.node?.name}
                              className="h-full w-full object-cover"
-                             height={200}
+                             height={400}
                              rounded="rounded-[15.73px]"
                              src={imageUrl || NOT_IMAGE}
-                             width={200}
+                             width={400}
+                             sizes="(max-width: 1280px) 120px, 194px"
                              onError={(e) => (e.currentTarget.src = NOT_IMAGE)}
                            />
                         </div>

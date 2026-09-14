@@ -29,7 +29,7 @@ export default async function Page({
     <div className="my-4 flex flex-col justify-between p-4">
       <div className="flex flex-col gap-4 mx-auto">
         <h1 className="text-2xl md:text-3xl font-bold">{pageData?.pageTitle}</h1>
-        <Prose className="mb-8" html={pageData?.htmlContent || ""} />
+        <Prose className="mb-8 dark:text-[#ffffffad]" html={pageData?.htmlContent || ""} />
       <p className="text-sm italic">
         {`This document was last updated on ${new Intl.DateTimeFormat(
           undefined,

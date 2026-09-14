@@ -404,8 +404,8 @@ export default function CompareTable({
                         </table>
                     </ScrollableContainer>
                     {totalPages > 1 && (
-                        <div className="flex flex-row justify-between items-center h-10 mt-6 px-4">
-                            <p className="font-outfit font-normal text-xs leading-[20px] text-black dark:text-white">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 sm:mt-6 px-4">
+                            <p className="font-outfit font-normal text-xs sm:text-sm text-black dark:text-white text-center sm:text-left">
                                 Showing {(currentPage - 1) * limit + 1} to {Math.min((currentPage - 1) * limit + products.length, totalCount)} of {totalCount} entries
                             </p>
                             <OrderPagination
@@ -556,8 +556,8 @@ export default function CompareTable({
                         </table>
                     </ScrollableContainer>
                     {totalPages > 1 && (
-                        <div className="flex flex-row justify-between items-center h-10 mt-6 px-4">
-                            <p className="font-outfit font-normal text-xs leading-[20px] text-black dark:text-white">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 sm:mt-6 px-4">
+                            <p className="font-outfit font-normal text-xs sm:text-sm text-black dark:text-white text-center sm:text-left">
                                 Showing {(currentPage - 1) * limit + 1} to {Math.min((currentPage - 1) * limit + products.length, totalCount)} of {totalCount} entries
                             </p>
                             <OrderPagination

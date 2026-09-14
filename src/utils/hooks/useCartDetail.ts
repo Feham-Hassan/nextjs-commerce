@@ -47,7 +47,7 @@ export function useCartDetail() {
     try {
       await getCartDetailMutation();
     } catch (e) {
-      throw e;
+      console.error("Failed to fetch cart details:", e);
     } finally {
       isInFlightRef.current = false;
       setIsInFlight(false);

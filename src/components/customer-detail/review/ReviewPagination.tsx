@@ -4,11 +4,8 @@ export default function ReviewPagination(props: {
   totalPages: number;
   currentPage: number;
   nextCursor?: string;
+  prevCursor?: string;
 }) {
-  return (
-    <AccountPagination
-      {...props}
-      activeClassName="text-black dark:text-white font-bold bg-surface-cool dark:bg-neutral-800"
-    />
-  );
+  return <AccountPagination {...props} />;
 }
+

@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { cookies, headers } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import {
   BagistoCreateUserOperation,
@@ -493,7 +493,7 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
   const isProductUpdate = productWebhooks.includes(topic);
 
   if (!secret || secret !== process.env.BAGISTO_REVALIDATION_SECRET) {
-    return NextResponse.json({ status: 200 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   if (!isCollectionUpdate && !isProductUpdate) {
@@ -502,8 +502,11 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 
   if (isProductUpdate) {
     revalidatePath("/", "layout");
+    revalidatePath("/product", "page");
+    revalidateTag("products", "max");
   } else if (isCollectionUpdate) {
     revalidatePath("/", "layout");
+    revalidateTag("categories", "max");
   }
 
   return NextResponse.json({
@@ -534,8 +537,9 @@ export async function getPage(input: { urlKey: string }): Promise<PageData[]> {
     variables: { pageByUrlKey: string };
   }>({
     query: PAGE_BY_URL_KEY,
-    cache: "no-store",
-    isCookies: false,
+    cache: "force-cache",
+    revalidate: 3600,
+    isCookies: true,
     variables: { pageByUrlKey: input.urlKey },
   });
 

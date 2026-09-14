@@ -57,7 +57,7 @@ const ALLOWED_OPERATIONS: Record<string, string> = buildOperations({
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { operationName, variables, query: clientQuery } = body;
+        const { operationName, variables } = body;
         const guestToken = getAuthToken(req);
 
         if (!operationName || !ALLOWED_OPERATIONS[operationName]) {
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const query = clientQuery || ALLOWED_OPERATIONS[operationName];
+        const query = ALLOWED_OPERATIONS[operationName];
 
         let finalVariables = variables;
 

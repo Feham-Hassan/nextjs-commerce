@@ -80,14 +80,15 @@ export default async function AddressesPage({
                     </div>
 
                     {totalCount > 0 && (
-                        <div className="py-6 flex flex-row justify-between items-center h-10 mt-6">
-                            <p className="font-outfit font-normal text-sm leading-[20px] text-black dark:text-white">
+                        <div className="py-4 sm:py-6 flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 sm:mt-6">
+                            <p className="font-outfit font-normal text-xs sm:text-sm text-black dark:text-white text-center sm:text-left">
                                 Showing {(currentPage - 1) * limit + 1} to {Math.min((currentPage - 1) * limit + addresses.length, totalCount)} of {totalCount} entries
                             </p>
                             <ReviewPagination
                                 totalPages={totalPages}
                                 currentPage={currentPage}
                                 nextCursor={pageInfo?.endCursor}
+                                prevCursor={pageInfo?.startCursor}
                             />
                         </div>
                     )}

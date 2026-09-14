@@ -9,36 +9,31 @@ import { WishlistToggle } from "@/components/catalog/product/WishlistToggle";
 import { CompareToggle } from "@/components/catalog/product/CompareToggle";
 import { baseUrl, getImageUrl, NOT_IMAGE } from "@/utils/constants";
 
+async function getRelatedProduct(urlKey: string) {
+  try {
+    const dataById = await cachedProductRequest<SingleProductResponse>(
+      urlKey,
+      GET_RELATED_PRODUCTS,
+      { urlKey, first: 4 }
+    );
+    return dataById?.product || null;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error fetching product:", {
+        message: error.message,
+        urlKey,
+        graphQLErrors: (error as unknown as Record<string, unknown>).graphQLErrors,
+      });
+    }
+    return null;
+  }
+}
+
 export async function RelatedProductsSection({
   fullPath,
 }: {
   fullPath: string;
 }) {
-    async function getRelatedProduct(urlKey: string) {
-      try {
-        const dataById = await cachedProductRequest<SingleProductResponse>(
-          urlKey,
-          GET_RELATED_PRODUCTS,
-          {
-            urlKey: urlKey,
-            first: 4,
-          }
-        );
-    
-        return dataById?.product || null;
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error("Error fetching product:", {
-            message: error.message,
-            urlKey,
-            graphQLErrors: (error as unknown as Record<string, unknown>)
-              .graphQLErrors,
-          });
-        }
-        return null;
-      }
-    }
-
     const fetchRelatedProducts = await getRelatedProduct(fullPath);
 
     const relatedProducts = (fetchRelatedProducts?.relatedProducts != null ) && fetchRelatedProducts?.relatedProducts?.edges

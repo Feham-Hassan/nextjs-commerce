@@ -8,8 +8,7 @@ import { ProductData } from "@components/catalog/type";
 import { CategoryNode } from "@/types/theme/category-tree";
 import { ProductReview } from "@/types/category/type";
 
-const __br = [100,115,118,45,50,48,50,53,46,48,52,46,49,57,45,55,101,50,57];
-export const __buildRevision = String.fromCharCode.apply(null, __br);
+export const __buildRevision = "dsv-2025.04.19-7e29";
 
 export const createUrl = (
   pathname: string,
@@ -27,7 +26,7 @@ export const ensureStartsWith = (stringToCheck: string, startsWith: string) =>
     : `${startsWith}${stringToCheck}`;
 
 export const validateEnvironmentVariables = () => {
-  const requiredEnvironmentVariables = ["BAGISTO_STORE_DOMAIN"];
+  const requiredEnvironmentVariables = ["NEXT_PUBLIC_BAGISTO_ENDPOINT"];
   const missingEnvironmentVariables = [] as string[];
 
   requiredEnvironmentVariables.forEach((envVar) => {
@@ -38,18 +37,18 @@ export const validateEnvironmentVariables = () => {
 
   if (missingEnvironmentVariables.length) {
     throw new Error(
-      `The following environment variables are missing. Your site will not work without them. Read more: https://vercel.com/docs/integrations/BAGISTO#configure-environment-variables\n\n${missingEnvironmentVariables.join(
+      `The following environment variables are missing. Your site will not work without them.\n\n${missingEnvironmentVariables.join(
         "\n",
       )}\n`,
     );
   }
 
   if (
-    process.env.BAGISTO_STORE_DOMAIN?.includes("[") ||
-    process.env.BAGISTO_STORE_DOMAIN?.includes("]")
+    process.env.NEXT_PUBLIC_BAGISTO_ENDPOINT?.includes("[") ||
+    process.env.NEXT_PUBLIC_BAGISTO_ENDPOINT?.includes("]")
   ) {
     throw new Error(
-      "Your `BAGISTO_STORE_DOMAIN` environment variable includes brackets (ie. `[` and / or `]`). Your site will not work with them there. Please remove them.",
+      "Your `NEXT_PUBLIC_BAGISTO_ENDPOINT` environment variable includes brackets (ie. `[` and / or `]`). Your site will not work with them there. Please remove them.",
     );
   }
 };
@@ -372,9 +371,10 @@ export const setCookie = (name: string, value: string | number, days = 30) => {
   const d = new Date();
   d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
   const expires = "expires=" + d.toUTCString();
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
   document.cookie = `${name}=${encodeURIComponent(
     String(value),
-  )};${expires};path=/`;
+  )};${expires};path=/;SameSite=Lax${secure}`;
 };
 
 export const getValidTitle = (text: string) => {
@@ -497,15 +497,16 @@ export function getCartItemImageUrl(baseImageRaw: unknown): string {
   }
 
   if (parsed && typeof parsed === "object") {
+    // Prefer higher-resolution images first to avoid blurry thumbnails in checkout/cart
     const candidate =
-      (parsed.small_image_url as string) ||
       (parsed.medium_image_url as string) ||
       (parsed.large_image_url as string) ||
       (parsed.original_image_url as string) ||
-      (parsed.url as string) ||
-      (parsed.smallImageUrl as string) ||
       (parsed.mediumImageUrl as string) ||
       (parsed.originalImageUrl as string) ||
+      (parsed.small_image_url as string) ||
+      (parsed.smallImageUrl as string) ||
+      (parsed.url as string) ||
       (parsed.path as string) ||
       "";
     if (typeof candidate === "string" && candidate) {

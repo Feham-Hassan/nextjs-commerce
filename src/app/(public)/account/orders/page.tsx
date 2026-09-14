@@ -113,23 +113,23 @@ export default async function OrdersPage({
 
     const totalPages = Math.ceil(totalCount / limit);
 
+    const formatStatus = (status: string) => {
+        if (!status) return "Pending";
+        return status
+            .replace(/[_-]/g, " ")
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    };
+
     const getStatusStyles = (status: string) => {
-        const s = (status || "").toLowerCase();
-        switch (s) {
-            case "processing":
-                return "bg-info text-white";
-            case "pending":
-                return "bg-rating text-white";
-            case "completed":
-                return "bg-success text-white";
-            case "canceled":
-            case "cancelled":
-                return "bg-danger text-white";
-            case "closed":
-                return "bg-neutral-500 text-white";
-            default:
-                return "bg-neutral-400 text-white";
-        }
+        const s = (status || "").toLowerCase().replace(/[_-]/g, " ");
+        if (s.includes("processing")) return "bg-info text-white";
+        if (s.includes("pending")) return "bg-rating text-white";
+        if (s.includes("completed")) return "bg-success text-white";
+        if (s.includes("cancel")) return "bg-danger text-white";
+        if (s.includes("closed")) return "bg-neutral-500 text-white";
+        return "bg-neutral-400 text-white";
     };
 
     const formatOrderDate = (dateStr: string) => {
@@ -213,10 +213,10 @@ export default async function OrdersPage({
                                                 </td>
                                                 <td className="px-6 text-left">
                                                     <span className={clsx(
-                                                        "h-6 min-w-[78px] rounded-xl px-2.5 inline-flex items-center justify-center font-outfit font-medium text-sm leading-[20px] whitespace-nowrap",
+                                                        "min-h-6 min-w-[78px] px-2.5 py-0.5 rounded-xl inline-flex items-center justify-center font-outfit font-medium text-sm leading-[20px] whitespace-nowrap",
                                                         getStatusStyles(order.status)
                                                     )}>
-                                                        {order.status ? (order.status.charAt(0).toUpperCase() + order.status.slice(1)) : "Pending"}
+                                                        {formatStatus(order.status)}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 text-left">
@@ -249,6 +249,7 @@ export default async function OrdersPage({
                             totalPages={totalPages}
                             currentPage={currentPage}
                             nextCursor={pageInfo?.endCursor}
+                            prevCursor={pageInfo?.startCursor}
                         />
                     </div>
 
@@ -281,10 +282,10 @@ export default async function OrdersPage({
                                             </div>
 
                                             <span className={clsx(
-                                                "h-5 w-[78px] rounded-xl flex items-center justify-center font-outfit font-medium text-xs leading-[20px] shrink-0",
+                                                "min-h-6 min-w-[78px] px-2.5 py-0.5 rounded-xl inline-flex items-center justify-center font-outfit font-medium text-xs leading-[20px] shrink-0 whitespace-nowrap",
                                                 getStatusStyles(order.status)
                                             )}>
-                                                {order.status ? (order.status.charAt(0).toUpperCase() + order.status.slice(1)) : "Pending"}
+                                                {formatStatus(order.status)}
                                             </span>
                                         </div>
                                     </Link>
@@ -297,14 +298,15 @@ export default async function OrdersPage({
                         )}
 
                         {orders.length > 0 && (
-                            <div className="flex flex-row justify-between items-center h-10">
-                                <p className="font-outfit font-regular text-xs leading-[20px] text-black dark:text-white">
+                            <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-4 pt-4">
+                                <p className="font-outfit font-normal text-xs sm:text-sm text-black dark:text-white text-center sm:text-left">
                                     Showing {(currentPage - 1) * limit + 1} to {Math.min((currentPage - 1) * limit + orders.length, totalCount)} of {totalCount} entries
                                 </p>
                                 <OrderPagination
                                     totalPages={totalPages}
                                     currentPage={currentPage}
                                     nextCursor={pageInfo?.endCursor}
+                                    prevCursor={pageInfo?.startCursor}
                                 />
                             </div>
                         )}

@@ -322,6 +322,39 @@ export interface ProductData {
     attributes?: unknown[];
     index?: unknown[];
   } | null;
+  isSaleable?: string;
+  combinations?: string;
+  superAttributeOptions?: string;
+  superAttributes?: {
+    edges: Array<{
+      node: {
+        id: string;
+        code: string;
+        adminName?: string;
+        options?: {
+          edges: Array<{
+            node: {
+              id: string;
+              adminName?: string;
+            };
+          }>;
+        };
+      };
+    }>;
+  };
+  attributeValues?: {
+    edges: Array<{
+      node: {
+        value: string;
+        attribute?: {
+          adminName?: string;
+          code?: string;
+          isFilterable?: string;
+          isVisibleOnFront?: string;
+        };
+      };
+    }>;
+  };
   groupedProducts?: {
     edges: Array<{
       node: {

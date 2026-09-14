@@ -73,10 +73,17 @@ const cartSlice = createSlice({
       state.shippingAddress = action.payload.shipping;
     },
 
-    resetAddressStep(_state) {
+    resetAddressStep(state) {
+      state.billingAddress = null;
+      state.shippingAddress = null;
     },
 
-    resetShippingStep(_state) {
+    resetShippingStep(state) {
+      if (state.cart) {
+        state.cart.shippingMethod = "";
+        state.cart.selectedShippingRate = "";
+        state.cart.selectedShippingRateTitle = "";
+      }
     },
 
   },

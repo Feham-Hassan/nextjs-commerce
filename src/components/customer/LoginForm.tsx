@@ -161,16 +161,6 @@ export default function LoginForm() {
                 <InputText
                   {...register("password", {
                     required: "Password is required",
-                    minLength: {
-                      value: 2,
-                      message: "Be at least 2 characters long",
-                    },
-                    validate: (value) => {
-                      if (!/[0-2]/.test(value))
-                        return "Contain at least one number.";
-
-                      return true;
-                    },
                   })}
                   errorMsg={
                     errors.password?.message ? [errors.password.message] : undefined
@@ -232,7 +222,7 @@ export default function LoginForm() {
         <button
           type="button"
           onClick={() => setIsShortcutsOpen(true)}
-          className="w-[181px] h-[47px] bg-surface-muted text-black dark:bg-surface-navy dark:text-white rounded-full flex items-center justify-center gap-1 font-outfit font-medium text-lg leading-none px-10 py-3 shadow-none border-none outline-none"
+          className="cursor-pointer w-[181px] h-[47px] bg-surface-muted text-black dark:bg-surface-navy dark:text-white rounded-full flex items-center justify-center gap-1 font-outfit font-medium text-lg leading-none px-10 py-3 shadow-none border-none outline-none"
         >
           <ShortcutIcon />
           <span>Shortcuts</span>

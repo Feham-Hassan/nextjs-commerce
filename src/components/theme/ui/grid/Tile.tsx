@@ -71,7 +71,7 @@ export function GridTileImage({
           className="absolute inset-0 z-0"
           width="100%"
           height="100%"
-          rounded="lg"
+          rounded={rounded}
         />
       )}
 
@@ -80,8 +80,6 @@ export function GridTileImage({
           ref={imgRef}
           src={imgSrc}
           alt={alt ?? ""}
-          placeholder="blur"
-          blurDataURL={NOT_IMAGE}
           {...props}
           onError={handleError}
           onLoad={loadDone}

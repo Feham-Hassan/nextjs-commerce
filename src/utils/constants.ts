@@ -100,6 +100,11 @@ export const configHeader = [
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "X-XSS-Protection", value: "1; mode=block" },
       {
+        key: "Content-Security-Policy",
+        value:
+          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:;",
+      },
+      {
         key: "Permissions-Policy",
         value:
           "camera=(), microphone=(), geolocation=(), browsing-topics=()",
@@ -327,4 +332,4 @@ export const COMPARE_AUTH_KEY = "compare_auth";
 export const COMPARE_DEFAULT_TTL_MS = 5 * 60 * 1000;
 
 
-export const CURRENCY_CODE = "USD";
+export const CURRENCY_CODE = process.env.NEXT_PUBLIC_CURRENCY_CODE || "USD";

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { cache as reactCache } from "react";
 import { cacheLife, cacheTag } from "next/cache";
 import type { Metadata } from "next";
 import {
@@ -39,7 +40,6 @@ import {
 import { WishlistToggle } from "@/components/catalog/product/WishlistToggle";
 import { CompareToggle } from "@/components/catalog/product/CompareToggle";
 import { getProductMetadata } from "@/utils/helper";
-import { ProductReview } from "@/types/category/type";
 
 
 export interface SingleProductResponse {
@@ -54,7 +54,7 @@ const BOOKING_SUBTYPE_QUERY_MAP = {
   default: GET_DEFAULT_BOOKING_DETAILS,
 } as const;
 
-async function getSingleProduct(urlKey: string) {
+const getSingleProduct = reactCache(async function getSingleProduct(urlKey: string) {
   try {
     const dataById = await cachedProductRequest<SingleProductResponse>(
       urlKey,
@@ -108,7 +108,7 @@ async function getSingleProduct(urlKey: string) {
     }
     return null;
   }
-}
+});
 
 export async function generateMetadata({
   params,
@@ -243,7 +243,6 @@ async function ProductContent({ fullPath }: { fullPath: string }) {
             <ProductInfo
               product={product as ProductData}
               slug={fullPath}
-              reviews={reviews as unknown as ProductReview[]}
             />
           </Suspense>
         </div>

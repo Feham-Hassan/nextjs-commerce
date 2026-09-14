@@ -154,10 +154,35 @@ categories {
         }
       }
     }
-      reviews {
+    combinations
+    superAttributeOptions
+    attributeValues {
       edges {
         node {
-          rating
+          value
+          attribute {
+            adminName
+            code
+            isFilterable
+            isVisibleOnFront
+          }
+        }
+      }
+    }
+    superAttributes {
+      edges {
+        node {
+          id
+          code
+          adminName
+          options {
+            edges {
+              node {
+                id
+                adminName
+              }
+            }
+          }
         }
       }
     }

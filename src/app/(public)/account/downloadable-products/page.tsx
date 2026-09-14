@@ -235,6 +235,7 @@ export default async function DownloadableProductsPage({
                             totalPages={totalPages}
                             currentPage={currentPage}
                             nextCursor={pageInfo?.endCursor}
+                            prevCursor={pageInfo?.startCursor}
                         />
                     </div>
 
@@ -257,7 +258,7 @@ export default async function DownloadableProductsPage({
                                                 {dateStr}
                                             </div>
                                             <div className="font-outfit font-medium text-sm leading-[22px] text-black/80 dark:text-white/80">
-                                                Status: <span className="text-black dark:text-white capitalize">{item.status ? item.status : "Pending"}</span>
+                                                Status: <span className="text-black dark:text-white capitalize">{item.status ? item.status.replace(/_/g, " ") : "Pending"}</span>
                                             </div>
                                             <div className="font-outfit font-normal text-xs leading-[22px] text-black/60 dark:text-selected-white">
                                                 Remaining Downloads
@@ -285,14 +286,15 @@ export default async function DownloadableProductsPage({
                         })}
 
                         {products.length > 0 && (
-                            <div className="flex flex-row justify-between items-center w-full h-10">
-                                <p className="font-outfit font-normal text-xs leading-[20px] text-black dark:text-white">
+                            <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-4 pt-4">
+                                <p className="font-outfit font-normal text-xs sm:text-sm text-black dark:text-white text-center sm:text-left">
                                     Showing {(currentPage - 1) * limit + 1} to {Math.min((currentPage - 1) * limit + products.length, totalCount)} of {totalCount} entries
                                 </p>
                                 <DownloadableProductPagination
                                     totalPages={totalPages}
                                     currentPage={currentPage}
                                     nextCursor={pageInfo?.endCursor}
+                                    prevCursor={pageInfo?.startCursor}
                                 />
                             </div>
                         )}

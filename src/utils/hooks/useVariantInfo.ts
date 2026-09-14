@@ -46,33 +46,65 @@ export const getVariantInfo = (
 
   const possibleOptions: Record<string, number[]> = {};
 
-  for (const attr of superAttributes) {
-    const otherSelectedAttributes = { ...selectedAttributes };
-    delete otherSelectedAttributes[attr.code];
+  if (Object.keys(selectedAttributes).length === 0) {
+    for (const attr of superAttributes) {
+      possibleOptions[attr.code] = [];
+    }
+  } else {
+    const attrValueToVariantIds: Record<string, Record<number, Set<string>>> = {};
 
-    const compatibleVariants = Object.entries(indexData).filter(([_, attributes]) =>
-      Object.entries(otherSelectedAttributes).every(
-        ([code, value]) => attributes[code] === value
-      )
-    );
-
-    possibleOptions[attr.code] = [];
-    for (const [, attributes] of compatibleVariants) {
-      const val = attributes[attr.code];
-      if (val !== undefined && !possibleOptions[attr.code].includes(val)) {
-        possibleOptions[attr.code].push(val);
+    for (const [variantId, attrs] of Object.entries(indexData)) {
+      for (const [code, value] of Object.entries(attrs)) {
+        if (!attrValueToVariantIds[code]) {
+          attrValueToVariantIds[code] = {};
+        }
+        if (!attrValueToVariantIds[code][value]) {
+          attrValueToVariantIds[code][value] = new Set();
+        }
+        attrValueToVariantIds[code][value].add(variantId);
       }
+    }
+
+    for (const attr of superAttributes) {
+      const otherSelectedAttributes = { ...selectedAttributes };
+      delete otherSelectedAttributes[attr.code];
+
+      let compatibleVariantIds: Set<string> | null = null;
+
+      for (const [code, value] of Object.entries(otherSelectedAttributes)) {
+        const variantIds = attrValueToVariantIds[code]?.[value];
+        if (!variantIds) {
+          compatibleVariantIds = new Set();
+          break;
+        }
+        if (compatibleVariantIds === null) {
+          compatibleVariantIds = new Set(variantIds);
+        } else {
+          const currentIds = [...compatibleVariantIds] as string[];
+          compatibleVariantIds = new Set(
+            currentIds.filter((id) => (variantIds || new Set()).has(id)),
+          );
+        }
+      }
+
+      if (compatibleVariantIds === null) {
+        compatibleVariantIds = new Set(Object.keys(indexData));
+      }
+
+      possibleOptions[attr.code] = [...compatibleVariantIds]
+        .map((id) => indexData[id]?.[attr.code])
+        .filter((val): val is number => val !== undefined);
     }
   }
 
   const variantAttributes = superAttributes.map((attr) => {
-      const rawOptions = Array.isArray(attr.options)
-        ? attr.options
-        : attr.options?.edges?.map((edge) => edge.node) || [];
+    const rawOptions = Array.isArray(attr.options)
+      ? attr.options
+      : attr.options?.edges?.map((edge) => edge.node) || [];
 
-      return {
-        ...attr,
-        options: rawOptions.map((option) => ({
+    return {
+      ...attr,
+      options: rawOptions.map((option) => ({
         ...option,
         isValid: (() => {
           const otherSelectedAttributes = { ...selectedAttributes };
@@ -89,13 +121,13 @@ export const getVariantInfo = (
   });
 
   const allSelected = superAttributes.every(
-    (attr) => selectedAttributes[attr.code] !== undefined
+    (attr) => selectedAttributes[attr.code] !== undefined,
   );
 
   const matchingVariants = Object.entries(indexData).filter(([_, attributes]) =>
     Object.entries(selectedAttributes).every(
-      ([code, value]) => attributes[code] === value
-    )
+      ([code, value]) => attributes[code] === value,
+    ),
   );
 
   if (allSelected && matchingVariants.length > 0) {
