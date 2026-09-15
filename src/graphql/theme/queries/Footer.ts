@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_FOOTER = gql`
   query footerQuery($type: String) {
-    themeCustomizations(type: $type) {
+    themeCustomizations: sections(type: $type) {
       edges {
         node {
           id
@@ -13,7 +13,7 @@ export const GET_FOOTER = gql`
             edges {
               node {
                 id
-                themeCustomizationId
+                themeCustomizationId: sectionId
                 locale
                 options
               }

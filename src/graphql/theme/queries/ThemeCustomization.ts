@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_THEME_CUSTOMIZATION = gql`
   query themeCustomization($first: Int) {
-    themeCustomizations(first: $first) {
+    themeCustomizations: sections(first: $first) {
       edges {
         node {
           id
@@ -14,7 +14,7 @@ export const GET_THEME_CUSTOMIZATION = gql`
             edges {
               node {
                 id
-                themeCustomizationId
+                themeCustomizationId: sectionId
                 locale
                 options
               }
